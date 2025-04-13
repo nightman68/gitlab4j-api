@@ -1150,6 +1150,87 @@ public class UserApi extends AbstractApi {
     }
 
     /**
+     * Get all custom attributes for the given user.
+     *
+     * <pre><code>GitLab Endpoint: GET /users/:id/custom_attributes</code></pre>
+     *
+     * @param userIdOrUsername the user in the form of an Long(ID), String(username), or User instance
+     * @return a list of users's CustomAttributes
+     * @throws GitLabApiException if any exception occurs
+     */
+    public List<CustomAttribute> getCustomAttributes(final Object userIdOrUsername) throws GitLabApiException {
+        return (getCustomAttributes(userIdOrUsername, getDefaultPerPage()).all());
+    }
+
+    /**
+     * Get a Pager of custom attributes for the given user.
+     *
+     * <pre><code>GitLab Endpoint: GET /users/:id/custom_attributes</code></pre>
+     *
+     * @param userIdOrUsername the user in the form of an Long(ID), String(username), or User instance
+     * @param itemsPerPage the number of items per page
+     * @return a Pager of users's custom attributes
+     * @throws GitLabApiException if any exception occurs
+     */
+    public Pager<CustomAttribute> getCustomAttributes(final Object userIdOrUsername, int itemsPerPage)
+            throws GitLabApiException {
+        return (new Pager<CustomAttribute>(
+                this,
+                CustomAttribute.class,
+                itemsPerPage,
+                null,
+                "users",
+                getUserIdOrUsername(userIdOrUsername),
+                "custom_attributes"));
+    }
+
+    /**
+     * Get a Stream of all custom attributes for the given user.
+     *
+     * <pre><code>GitLab Endpoint: GET /users/:id/custom_attributes</code></pre>
+     *
+     * @param userIdOrUsername the user in the form of an Long(ID), String(username), or User instance
+     * @return a Stream of user's custom attributes
+     * @throws GitLabApiException if any exception occurs
+     */
+    public Stream<CustomAttribute> getCustomAttributesStream(final Object userIdOrUsername) throws GitLabApiException {
+        return (getCustomAttributes(userIdOrUsername, getDefaultPerPage()).stream());
+    }
+
+    /**
+     * Get a single custom attribute for the given user.
+     *
+     * <pre><code>GitLab Endpoint: GET /users/:id/custom_attributes/:key</code></pre>
+     *
+     * @param userIdOrUsername the user in the form of an Long(ID), String(username), or User instance
+     * @param key the key for the custom attribute
+     * @return a CustomAttribute instance for the specified key
+     * @throws GitLabApiException if any exception occurs
+     */
+    public CustomAttribute getCustomAttribute(final Object userIdOrUsername, final String key) throws GitLabApiException {
+        Response response =
+                get(Response.Status.OK, null, "users", getUserIdOrUsername(userIdOrUsername), "custom_attributes", key);
+        return (response.readEntity(CustomAttribute.class));
+    }
+
+    /**
+     * Get an Optional instance with the value for a single custom attribute for the given user.
+     *
+     * <pre><code>GitLab Endpoint: GET /users/:id/custom_attributes/:key</code></pre>
+     *
+     * @param userIdOrUsername the user in the form of an Long(ID), String(username), or User instance
+     * @param key the key for the custom attribute, required
+     * @return an Optional instance with the value for a single custom attribute for the given user
+     */
+    public Optional<CustomAttribute> geOptionalCustomAttribute(final Object userIdOrUsername, final String key) {
+        try {
+            return (Optional.ofNullable(getCustomAttribute(userIdOrUsername, key)));
+        } catch (GitLabApiException glae) {
+            return (GitLabApi.createOptionalFromException(glae));
+        }
+    }
+
+    /**
      * Creates custom attribute for the given user
      *
      * @param userIdOrUsername the user in the form of an Long(ID), String(username), or User instance
