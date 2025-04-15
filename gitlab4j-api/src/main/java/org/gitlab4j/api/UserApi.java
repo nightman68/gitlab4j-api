@@ -1207,7 +1207,8 @@ public class UserApi extends AbstractApi {
      * @return a CustomAttribute instance for the specified key
      * @throws GitLabApiException if any exception occurs
      */
-    public CustomAttribute getCustomAttribute(final Object userIdOrUsername, final String key) throws GitLabApiException {
+    public CustomAttribute getCustomAttribute(final Object userIdOrUsername, final String key)
+            throws GitLabApiException {
         Response response =
                 get(Response.Status.OK, null, "users", getUserIdOrUsername(userIdOrUsername), "custom_attributes", key);
         return (response.readEntity(CustomAttribute.class));
